@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rabbitmq
+spec:
+  selector:
+      matchLabels:
+        app: rabbitmq
+  replicas: 1
+  template:
+      metadata:
+        labels:
+            app: rabbitmq
+      spec:
+        containers:
+        - name: rabbitmq
+          image: chipfat/dsfc-rabbitmq:v1
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "1000m"
+          ports:
+          - containerPort: 15672
+          - containerPort: 5672
+          volumeMounts:
+          - mountPath: "/var/log/rabbitmq"
+            name: scalable-app-mq-log
+          - mountPath: "/var/lib/rabbitmq"
+            name: scalable-app-mq-data
+        volumes:
+        - name: scalable-app-mq-log
+          persistentVolumeClaim:
+            claimName: scalable-app-mq-log
+        - name: scalable-app-mq-data
+          persistentVolumeClaim:
+            claimName: scalable-app-mq-data

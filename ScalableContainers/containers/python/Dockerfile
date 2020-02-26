@@ -1,7 +1,7 @@
 FROM python:3.7-alpine
 
 # Add core OS requirements
-RUN apk update && apk add bash vim
+RUN apk update && apk add bash vim git
 
 # Add Python Libraries
 RUN pip install pika
